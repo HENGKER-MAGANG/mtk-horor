@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mathorror Soal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Orbitron', monospace;
+      background-image: url('https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9b?auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-attachment: fixed;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      box-shadow: 0 0 20px red;
+      max-width: 600px;
+      width: 100%;
+      padding: 2.5rem;
+      text-align: center;
+      position: relative;
+    }
+    h2 {
+      text-shadow: 3px 3px 8px #ff0000aa;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+    }
+    #timer {
+      font-size: 1.5rem;
+      color: #ff4c4c;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px black;
+    }
+    #lives, #score {
+      font-size: 1.3rem;
+      font-weight: 600;
+      text-shadow: 1px 1px 3px black;
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1.5rem;
+      user-select: none;
+    }
+    #questionBox {
+      background: #1b1b1bcc;
+      padding: 2rem 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #ff0000cc;
+      border: 2px solid #ff4c4c;
+      margin-bottom: 1.5rem;
+    }
+    #question {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #ff4747;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 6px black;
+    }
+    #options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    #options button {
+      flex: 1 1 45%;
+      min-width: 100px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: 2px solid #ff4c4c;
+      color: white;
+      background: transparent;
+      transition: all 0.3s ease;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    #options button:hover {
+      background-color: #ff4c4c;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #ff4c4caa;
+    }
+    #options button.active {
+      background-color: #ff1a1a;
+      color: white;
+      box-shadow: 0 0 15px #ff0000cc;
+      border-color: #ff1a1a;
+    }
+    button#submitBtn {
+      width: 100%;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 12px;
+      padding: 0.75rem;
+      background-color: #d90429;
+      border: none;
+      color: white;
+      box-shadow: 0 0 12px #d90429cc;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    button#submitBtn:hover:not(:disabled) {
+      background-color: #9f0215;
+      box-shadow: 0 0 18px #9f0215cc;
+    }
+    button#submitBtn:disabled {
+      background-color: #6b0000;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    #feedback {
+      font-size: 1.25rem;
+      font-weight: 700;
+      min-height: 40px;
+      margin-top: 0.5rem;
+      text-shadow: 1px 1px 3px black;
+    }
+    a.btn-outline-light {
+      border-color: white;
+      color: white;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    a.btn-outline-light:hover {
+      background-color: white;
+      color: #d90429;
+      font-weight: 900;
+      box-shadow: 0 0 8px #d90429cc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay">
+    <h2>🩸 Soal Mathorror 🩸</h2>
+
+    <div class="mb-4">
+      <label for="level" class="form-label fw-bold">Pilih Level:</label>
+      <select id="level" class="form-select w-50 mx-auto bg-dark text-white border border-danger">
+        <option value="1">Level 1 - Penjumlahan</option>
+        <option value="2">Level 2 - Persamaan</option>
+        <option value="3">Level 3 - Logika</option>
+      </select>
+    </div>
+
+    <div class="status-bar mb-3">
+      <div id="timer">⏳ Waktu: 10</div>
+      <div id="lives">❤️ Nyawa: 3</div>
+      <div id="score">💯 Skor: 0</div>
+    </div>
+
+    <div id="questionBox">
+      <div id="question"></div>
+      <div id="options"></div>
+      <button id="submitBtn" disabled>Jawab</button>
+      <p id="feedback"></p>
+    </div>
+
+    <a href="index.html" class="btn btn-outline-light mt-3">🏠 Kembali ke Halaman Utama</a>
+  </div>
+
+  <!-- Suara -->
+  <audio id="correctSound" src="audio/benar.mp3" preload="auto"></audio>
+  <audio id="wrongSound" src="audio/salah.mp3" preload="auto"></audio>
+  <audio id="gameOverSound" src="audio/time.wav" preload="auto"></audio>
+  <audio id="backgroundMusic" src="audio/backsound.mp3" preload="auto" loop></audio>
+
+  <script>
+    const backgroundMusic = document.getElementById("backgroundMusic");
+    backgroundMusic.volume = 0.4;
+    backgroundMusic.play().catch(() => {}); // Play, ignore errors if blocked
+
+    const correctSound = document.getElementById("correctSound");
+    const wrongSound = document.getElementById("wrongSound");
+    const gameOverSound = document.getElementById("gameOverSound");
+
+    const questions = {
+      1: [
+        { q: '3 + 5 = ?', options: ['6', '7', '8', '9'], a: '8' },
+        { q: '10 + 12 = ?', options: ['20', '22', '23', '24'], a: '22' },
+        { q: '7 + 6 = ?', options: ['12', '13', '14', '15'], a: '13' },
+        { q: '9 + 3 = ?', options: ['11', '12', '13', '14'], a: '12' },
+        { q: '15 + 4 = ?', options: ['18', '19', '20', '21'], a: '19' },
+        { q: '6 + 9 = ?', options: ['14', '15', '16', '17'], a: '15' },
+        { q: '8 + 7 = ?', options: ['14', '15', '16', '17'], a: '15' }
+      ],
+      2: [
+        { q: 'x + 5 = 12. Berapa x?', options: ['5', '6', '7', '8'], a: '7' },
+        { q: '2x = 10. Berapa x?', options: ['2', '5', '10', '8'], a: '5' },
+        { q: 'x - 3 = 4. Berapa x?', options: ['6', '7', '8', '9'], a: '7' },
+        { q: 'x / 2 = 6. Berapa x?', options: ['12', '10', '8', '14'], a: '12' },
+        { q: '3x + 2 = 11. Berapa x?', options: ['2', '3', '4', '5'], a: '3' },
+        { q: '5x = 20. Berapa x?', options: ['3', '4', '5', '6'], a: '4' }
+      ],
+      3: [
+        { q: 'Semua A adalah B. Semua B adalah C. Apakah semua A adalah C?', options: ['ya', 'tidak'], a: 'ya' },
+        { q: '3 kucing = 3 tikus / 3 menit. 100 tikus / 100 menit = ...?', options: ['3', '9', '33', '100'], a: '3' },
+        { q: 'Ayah Budi punya tiga anak: Ani, Andi, dan ...?', options: ['Budi', 'Anto', 'Aldi', 'Ayu'], a: 'Budi' },
+        { q: 'Seseorang punya 2 anak: 1 laki, 1 perempuan. Siapa kakaknya?', options: ['Laki-laki', 'Perempuan', 'Tidak diketahui'], a: 'Tidak diketahui' },
+        { q: 'Jika A maka B. Tapi B salah. Apakah A benar?', options: ['ya', 'tidak'], a: 'tidak' },
+        { q: 'Semua X bukan Y. Apakah mungkin ada X yang Y?', options: ['ya', 'tidak'], a: 'tidak' }
+      ]
+    };
+
+    let currentQuestion = {};
+    let lives = 3, score = 0, timer = 10, countdown;
+    let isTabActive = true;
+
+    const timerEl = document.getElementById('timer');
+    const livesEl = document.getElementById('lives');
+    const scoreEl = document.getElementById('score');
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const submitBtn = document.getElementById('submitBtn');
+    const levelSelect = document.getElementById('level');
+
+    function updateUI() {
+      livesEl.innerText = `❤️ Nyawa: ${lives}`;
+      scoreEl.innerText = `💯 Skor: ${score}`;
+      submitBtn.disabled = true;
+    }
+
+    function loadQuestion() {
+      clearInterval(countdown);
+      timer = 10;
+      timerEl.innerText = `⏳ Waktu: ${timer}`;
+      feedbackEl.innerText = '';
+      submitBtn.disabled = true;
+
+      const level = levelSelect.value;
+      const levelQuestions = questions[level];
+      currentQuestion = levelQuestions[Math.floor(Math.random() * levelQuestions.length)];
+
+      questionEl.innerText = currentQuestion.q;
+
+      optionsEl.innerHTML = '';
+      currentQuestion.options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-outline-danger';
+        btn.type = 'button';
+        btn.innerText = option;
+        btn.onclick = () => {
+          if (!isTabActive) return;
+          document.querySelectorAll('#options button').forEach(b => b.classList.remove('active', 'bg-danger', 'text-white'));
+          btn.classList.add('active', 'bg-danger', 'text-white');
+          submitBtn.disabled = false;
+          feedbackEl.innerText = '';
+        };
+        optionsEl.appendChild(btn);
+      });
+
+      countdown = setInterval(() => {
+        if (!isTabActive) return;
+        timer--;
+        timerEl.innerText = `⏳ Waktu: ${timer}`;
+        if (timer <= 0) {
+          clearInterval(countdown);
+          gameOverSound.play();
+          feedbackEl.innerText = '⏰ Waktu habis! Jawaban salah.';
+          loseLife();
+        }
+      }, 1000);
+    }
+
+    function loseLife() {
+      lives--;
+      updateUI();
+      if (lives <= 0) {
+        alert('Game Over! Skor Anda: ' + score);
+        resetGame();
+      } else {
+        setTimeout(() => loadQuestion(), 2000);
+      }
+    }
+
+    function resetGame() {
+      lives = 3;
+      score = 0;
+      updateUI();
+      loadQuestion();
+    }
+
+    submitBtn.addEventListener('click', () => {
+      const selectedBtn = document.querySelector('#options button.active');
+      if (!selectedBtn) return;
+      clearInterval(countdown);
+      const answer = selectedBtn.innerText;
+      if (answer === currentQuestion.a) {
+        score += 10;
+        updateUI();
+        feedbackEl.style.color = '#7CFC00';
+        feedbackEl.innerText = '✔️ Jawaban benar!';
+        correctSound.play();
+      } else {
+        feedbackEl.style.color = '#ff4c4c';
+        feedbackEl.innerText = `❌ Jawaban salah! Jawaban benar: ${currentQuestion.a}`;
+        wrongSound.play();
+        loseLife();
+        return;
+      }
+      submitBtn.disabled = true;
+      setTimeout(() => {
+        feedbackEl.style.color = 'white';
+        loadQuestion();
+      }, 1500);
+    });
+
+    levelSelect.addEventListener('change', () => {
+      resetGame();
+    });
+
+    // Tab visibility detection
+    document.addEventListener('visibilitychange', () => {
+      isTabActive = !document.hidden;
+      if (!isTabActive) clearInterval(countdown);
+      else {
+        if (lives > 0 && submitBtn.disabled) {
+          countdown = setInterval(() => {
+            timer--;
+            timerEl.innerText = `⏳ Waktu: ${timer}`;
+            if (timer <= 0) {
+              clearInterval(countdown);
+              gameOverSound.play();
+              feedbackEl.innerText = '⏰ Waktu habis! Jawaban salah.';
+              loseLife();
+            }
+          }, 1000);
+        }
+      }
+    });
+
+    // Inisialisasi
+    updateUI();
+    loadQuestion();
+  </script>
+
+</body>
+</html>

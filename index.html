@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathorror - Dunia Ujian Gelap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <script src="https://unpkg.com/scrollreveal"></script>
+</head>
+<body class="bg-black text-white font-mono">
+
+  <!-- Header -->
+  <header class="text-center py-10">
+    <h1 class="text-4xl md:text-6xl font-bold text-red-600 animate__animated animate__fadeInDown">Mathorror</h1>
+    <p class="text-gray-300 mt-2">Ujian Matematika di Dunia Gelap</p>
+  </header>
+
+  <!-- Hero -->
+  <section class="container py-10 text-center">
+    <img src="https://img.freepik.com/free-photo/horror-scene-dark-forest_23-2150897927.jpg" alt="Mathorror" class="mx-auto rounded shadow-lg w-full max-w-3xl" />
+    <h2 class="text-3xl mt-6 text-red-500 font-semibold" data-sr>Masuk ke Dunia Mengerikan</h2>
+    <p class="mt-4 text-gray-400" data-sr>
+      Bayangkan jika matematika menjadi ujian terakhir yang menentukan hidupmu. Berani mencoba?
+    </p>
+    <a href="quiz.html" class="btn btn-danger mt-5" data-sr>Mulai Sekarang</a>
+  </section>
+
+  <!-- Section Cerita -->
+  <section class="bg-gray-900 py-12">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4 mb-4" data-sr>
+          <h3 class="text-xl text-red-400">Level 1: Penjumlahan Neraka</h3>
+          <p class="text-gray-300 mt-2">Soal sederhana, tapi nyawamu taruhannya.</p>
+        </div>
+        <div class="col-md-4 mb-4" data-sr>
+          <h3 class="text-xl text-red-400">Level 2: Persamaan Maut</h3>
+          <p class="text-gray-300 mt-2">Satu kesalahan, tamat sudah.</p>
+        </div>
+        <div class="col-md-4 mb-4" data-sr>
+          <h3 class="text-xl text-red-400">Level 3: Logika Labirin</h3>
+          <p class="text-gray-300 mt-2">Pakai otak atau lenyap selamanya.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 bg-black border-t border-gray-700">
+    <p class="text-gray-500">© 2025 Mathorror. Dunia Ujian Tanpa Ampun.</p>
+  </footer>
+
+  <script>
+    ScrollReveal().reveal('[data-sr]', {
+      delay: 200,
+      distance: '30px',
+      duration: 1000,
+      origin: 'bottom',
+      easing: 'ease-in-out'
+    });
+  </script>
+
+</body>
+</html>
